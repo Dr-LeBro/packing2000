@@ -1,6 +1,9 @@
-#ifndef _H_TRUC_
-#define _H_TRUC_
+#ifndef _H_GENERATOR_
+#define _H_GENERATOR_
 
-int truc();
+#define LMAX 100
+#define HMAX 50
+#define NBMAX 50
 
-#endif
+void aff_specif();
+int main(int argc, char *argv[]);

@@ -1,4 +1,2 @@
-#include <stdio.h>
-#include <stdlib.h>
-
-
+#include<stdlio.h>
+#include<stdlib.h>
