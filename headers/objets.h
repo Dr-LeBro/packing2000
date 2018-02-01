@@ -17,6 +17,3 @@ typedef struct{
 	int x;
 	int y;
 } objet;
-
-
-#endif
