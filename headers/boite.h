@@ -9,6 +9,3 @@ typedef struct{
 	int largeur;
 	int hauteur;
 }boite;
-
-
-#endif
