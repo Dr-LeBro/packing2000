@@ -1,8 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include"../headers/algo.h"
-#include"../headers/boite.h"
-#include"../headers/objets.h"
+
 
 int selecteur_largeur(int largeurBoite, Liste *boiteObjets, int largeurBandes, int resultats[3]){
 	int largeurRestante = largeurBoite-largeurBandes; 

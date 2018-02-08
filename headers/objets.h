@@ -3,11 +3,7 @@
 
 typedef struct{
 	int nb_objets;	
-	int nb_objets_sol;
-	int nb_objets_sol_tmp;
 	objet* objets;
-	objet* objets_sol;
-	objet* objets_sol_tmp;
 }Liste;
 
 typedef struct{
@@ -17,3 +13,5 @@ typedef struct{
 	int x;
 	int y;
 } objet;
+
+#endif
