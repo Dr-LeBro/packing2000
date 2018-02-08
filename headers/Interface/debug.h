@@ -1,6 +1,5 @@
-#ifndef _H_TRUC_
-#define _H_TRUC_
+#ifndef _H_DEBUG_
+#define _H_DEBUG_
 
-int truc();
 
 #endif
