@@ -19,4 +19,5 @@ void reception_objets(Liste* a);
 void ajouter_objet(Liste* a, char *nom, int l, int h, int x, int y);
 void ajouter_objet_struct(Liste* a, objet* obj);
 void supprimer_objet(Liste* a, char *nom);	
+
 #endif

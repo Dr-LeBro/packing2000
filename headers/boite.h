@@ -1,6 +1,7 @@
 #ifndef _H_BOITE_
 #define _H_BOITE_
 #include"objets.h"
+
 /*Type boite*/
 typedef struct{
 	int largeur;
@@ -16,6 +17,5 @@ typedef struct{
 
 void initialiser_boite(boite *box);
 void reception_boite(boite *box);
-
 
 #endif
