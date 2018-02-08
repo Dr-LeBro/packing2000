@@ -1,6 +1,3 @@
-#ifndef _H_TRUC_
-#define _H_TRUC_
-
-int truc();
-
+#ifndef _H_INTERFACEC_
+#define _H_INTERFACEC_
 #endif

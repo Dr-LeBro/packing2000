@@ -7,3 +7,4 @@
 
 void aff_specif();
 int main(int argc, char *argv[]);
+#endif
