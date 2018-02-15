@@ -2,18 +2,22 @@
 #define _H_OBJETS_
 
 typedef struct{
-	int nb_objets;	
-	int nb_objets_sol;
-	int nb_objets_sol_tmp;
-	objet* objets;
-	objet* objets_sol;
-	objet* objets_sol_tmp;
-}Liste;
-
-typedef struct{
-	char nom;
+	char nom[50];
 	int largeur;
 	int hauteur;
-	int x;
-	int y;
+	//int rotation;
 } objet;
+
+typedef struct{
+	int nb_objets;
+	int nb_objets_courant;
+	objet* objets;
+}Liste;
+
+Liste initialiser_liste();
+void reception_objets(Liste* a);
+void ajouter_objet(Liste* a, char *nom, int l, int h, int x, int y);
+void ajouter_objet_struct(Liste* a, objet* obj);
+void supprimer_objet(Liste* a, char *nom);	
+
+#endif
