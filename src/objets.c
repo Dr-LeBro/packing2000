@@ -28,8 +28,8 @@ void reception_objets(Liste* a){
 		scanf("%d",&a->objets[i].largeur);
 		scanf("%d",&a->objets[i].hauteur);
 		strcpy(a->objets[i].nom,tmp_char);
-		a->objets[i].x=-1;
-		a->objets[i].y=-1;	
+		//a->objets[i].x=-1;
+		//a->objets[i].y=-1;	
 		i++;
 	}
 }
@@ -41,13 +41,13 @@ void ajouter_objet(Liste* a, char *nom ,int l, int h, int x, int y){
 	a->objets[a->nb_objets-1].largeur=l;
 	a->objets[a->nb_objets-1].hauteur=h;
 	strcpy(a->objets[a->nb_objets-1].nom,nom);
-	a->objets[a->nb_objets-1].x=x;
-	a->objets[a->nb_objets-1].y=y;
+	//a->objets[a->nb_objets-1].x=x;
+	//a->objets[a->nb_objets-1].y=y;
 }
 
 /*Ajout objet a liste, objet, N°Liste (Simplification de ajouter_objet)*/
 void ajouter_objet_struct(Liste* a, objet* obj){
-	ajouter_objet(a, obj->nom, obj->largeur, obj->hauteur, obj->x, obj->y);	
+	ajouter_objet(a, obj->nom, obj->largeur, obj->hauteur, 0,0);	
 }
 
 /*Supp objets*/
@@ -66,8 +66,3 @@ void supprimer_objet(Liste* a, char *nom){
 		}
 	}
 }
-
-
-
-
-/*Comparaison liste*/
