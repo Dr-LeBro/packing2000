@@ -27,7 +27,7 @@ int main(){
 	fflush(stdout);
 	afficher_tout(&L,&B);
 	printf("DEBUT \n");
-	int result = remplir_boite(B.largeur, B.hauteur, &L,0,L.nb_objets);
+	int result = remplir_boite(B.largeur, B.hauteur, &L,B.largeur,L.nb_objets);
 	printf("RESULTAT SURFACE : %d\n",result);	
 	return 0;
 }
