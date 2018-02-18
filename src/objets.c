@@ -14,6 +14,7 @@ Liste initialiser_liste(){
 	ptr=malloc(sizeof(Liste));
 	ptr->nb_objets=0;
 	ptr->objets=NULL;
+	ptr->bande_solution=NULL;
 	return *ptr;
 }
 
@@ -65,4 +66,10 @@ void supprimer_objet(Liste* a, char *nom){
 			a->objets=realloc(a->objets, sizeof(objet)*a->nb_objets);
 		}
 	}
+}
+
+void ajouter_bande_solution(Liste *a, bande *b){
+	a->nb_bande_solution++;
+	a->bande_solution=realloc(a->bande_solution, sizeof(bande)*a->nb_bande_solution);
+	a->bande_solution[a->nb_bande_solution-1]=*b;
 }

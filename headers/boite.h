@@ -8,12 +8,6 @@ typedef struct{
 	int hauteur;
 }boite;
 
-/*Type Bande*/
-typedef struct{
-	int nb_objets;
-	int surface;
-}bande;
-
 void initialiser_boite(boite *box);
 void reception_boite(boite *box);
 
