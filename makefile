@@ -19,7 +19,7 @@ vpath %.c src/Generator
 
 vpath %.o Ofiles
 
-all: xX_projet_Xx generator
+all: makedir xX_projet_Xx generator
 
 xX_projet_Xx : main.c $(OBJ)
 	$(CC) $(CCFLAGS) -o xX_projet_Xx $(PATHSRC)main.c $(OBJ2)
@@ -45,9 +45,11 @@ interfaceC.o : interfaceC.c interfaceC.h debug.h
 debug.o : debug.c debug.h
 	$(CC) $(CCFLAGS) -c $(PATHSRC)$(DEPINT)debug.c $(OUTO)
 
+makedir :
+	- mkdir Ofiles
 clean :
-	- rm xX_projet_Xx
-	- rm -f *.o
+	- rm xX_projet_Xx generator
+	- rm -f -r Ofiles/
 
 
 

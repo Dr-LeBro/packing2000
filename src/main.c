@@ -4,6 +4,7 @@
 #include"../headers/objets.h"
 #include"../headers/algo.h"
 
+/*Affiche Boite et Liste_Objets*/
 void afficher_tout(Liste_objet *a,boite *box){ 
         int i; 
         printf("---------AFFICHER TOUT---------\n"); 
@@ -17,29 +18,37 @@ void afficher_tout(Liste_objet *a,boite *box){
 	}
 }
 
-void afficher_liste_bande(Liste_Bande *a){
-	int i,j;
-	
-	printf("----------AFFICHAGE OBJETS BANDE SOLUTION----------\n");
-	printf("Surface %d \n",a->surface);
-	printf("_____________________________\n");
-	printf("Nom Objet | Largeur | Hauteur\n"); 
-	for(i=0;i<a->nb_bandes;i++){
-		printf("	Bande %d | %d objets | surface %d\n",i,a->bande[i].nb_objets,a->bande[i].surface);
-		for(j=0; j<a->bande[i].nb_objets;j++){
-			printf(" %8s |",a->bande[i].objets_bande[j].nom);
-			printf(" %7.d |", a->bande[i].objets_bande[j].largeur);
-			printf(" %7.d \n",a->bande[i].objets_bande[j].hauteur);
-		}
-	}
-}
-
+/*Affiche type Liste */
 void afficher_listeS(Liste *listeS, Liste_objet *a){
 	int i;
 	printf("----------------AFFICHAGE LISTE S--------------------\n");
 	printf("	nb_objets : %d\n",listeS->nb_objets);
 	for(i=0; i<a->nb_objets;i++){
 		printf(" %d , %d \n",listeS->objets[i], listeS->orientation[i]);
+	}
+}
+
+/*Trouver max pour afficher_bandes*/
+int trouver_max(Liste *S, Liste_objet *L){
+	int i,max=0;
+	for(i=0;i<L->nb_objets;i++){
+		if(max<S->objets[i]) max=S->objets[i];
+	}
+	return max;
+}
+
+/*Afficher bandes */
+void afficher_bandes(Liste *S, Liste_objet *L){
+	int i,j, max=trouver_max(S,L);
+	for(i=1;i<=max;i++){
+		printf("------------BANDE %d----------\n",i);
+		printf("___________________________________________\n");
+		printf("Nom Objet | Largeur | Hauteur | Orientation\n"); 
+        	for(j=0;j<L->nb_objets;j++){
+			if(S->objets[j]==i){
+				printf(" %8s | %7.d | %7.d | %d\n",L->objets[j].nom, L->objets[j].largeur, L->objets[j].hauteur, S->orientation[j]); 
+			}
+		}
 	}
 }
 
@@ -52,10 +61,11 @@ int main(){
 	reception_objets(&L);
 	fflush(stdout);
 	Liste listeA=initialiser_listeA(L.nb_objets);
-	printf("DEBUT \n");
+	printf("DEBUT ALGO\n");
 	Liste listeS = remplir_boite(&B,&L, listeA, B.largeur, 1);
 	printf("----------------------------------------\n RESULTAT SURFACE : %d \n",listeS.surface);
-	afficher_listeS(&listeS, &L);
+	//afficher_listeS(&listeS, &L);
+	afficher_bandes(&listeS,&L);
 	afficher_tout(&L,&B);
 	return 0;
 }

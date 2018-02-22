@@ -66,39 +66,8 @@ void supprimer_objet(Liste_objet* a, char *nom){
 		}
 	}
 }
-void ajouter_bande_solution(Liste_objet *a, bande *b){
-}
 
-/*
-Liste_Bande fusionner_liste_bande(Liste_Bande *A, Liste_Bande *B){
-	Liste_Bande *tmp;
-	tmp->nb_bandes=A->nb_bandes+B->nb_bandes;
-	tmp->surface=A->surface+B->surface;
-	tmp->bande=malloc(sizeof(bande)*(A->nb_bandes+B->nb_bandes));
-	for(i=0;i<A->nb_bandes;i++){
-		tmp->bande[i]=A->bande[i];
-	}
-	for(i=0;i<B->nb_bandes;i++){
-		tmp->bande[i+A->nb_bandes]=B->bande[i];
-	}
-	return tmp;
-}
-*/
-void ajout_bande(Liste_Bande *A, bande *b){
-	A->bande=realloc(A->bande,sizeof(bande)*(A->nb_bandes+1));
-	A->bande[A->nb_bandes]=*b;
-	A->nb_bandes++;
-	A->surface+=b->surface;
-}
-
-Liste_Bande *initialiser_liste_bande(){
-	Liste_Bande *tmp=malloc(sizeof(Liste_Bande));
-	tmp->surface=0;
-	tmp->nb_bandes=0;
-	tmp->bande=NULL;
-	return tmp;
-}
-
+/*Initiliser listeA */
 Liste initialiser_listeA(int nb_objets){
 	Liste tmp;
 	tmp.nb_objets=0;
@@ -113,6 +82,7 @@ Liste initialiser_listeA(int nb_objets){
 	return tmp;
 }
 	
+/*Copie listeA vers une nouvelle liste*/
 Liste dupliquer_listeA(Liste* A, int nb_objets_total){
 	Liste tmp=initialiser_listeA(nb_objets_total);
 	tmp.nb_objets=A->nb_objets;
