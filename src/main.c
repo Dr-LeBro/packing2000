@@ -4,7 +4,7 @@
 #include"../headers/objets.h"
 #include"../headers/algo.h"
 
-void afficher_tout(Liste *a,boite *box){ 
+void afficher_tout(Liste_objet *a,boite *box){ 
         int i; 
         printf("---------AFFICHER TOUT---------\n"); 
         printf(" Dimensions boite: %d x %d\n",box->largeur, box->hauteur); 
@@ -17,17 +17,45 @@ void afficher_tout(Liste *a,boite *box){
 	}
 }
 
+void afficher_liste_bande(Liste_Bande *a){
+	int i,j;
+	
+	printf("----------AFFICHAGE OBJETS BANDE SOLUTION----------\n");
+	printf("Surface %d \n",a->surface);
+	printf("_____________________________\n");
+	printf("Nom Objet | Largeur | Hauteur\n"); 
+	for(i=0;i<a->nb_bandes;i++){
+		printf("	Bande %d | %d objets | surface %d\n",i,a->bande[i].nb_objets,a->bande[i].surface);
+		for(j=0; j<a->bande[i].nb_objets;j++){
+			printf(" %8s |",a->bande[i].objets_bande[j].nom);
+			printf(" %7.d |", a->bande[i].objets_bande[j].largeur);
+			printf(" %7.d \n",a->bande[i].objets_bande[j].hauteur);
+		}
+	}
+}
+
+void afficher_listeS(Liste *listeS, Liste_objet *a){
+	int i;
+	printf("----------------AFFICHAGE LISTE S--------------------\n");
+	printf("	nb_objets : %d\n",listeS->nb_objets);
+	for(i=0; i<a->nb_objets;i++){
+		printf(" %d , %d \n",listeS->objets[i], listeS->orientation[i]);
+	}
+}
+
 int main(){
 	boite B;
 	initialiser_boite(&B);
-	Liste L;
+	Liste_objet L;
 	L=initialiser_liste();
 	reception_boite(&B);
 	reception_objets(&L);
 	fflush(stdout);
-	afficher_tout(&L,&B);
+	Liste listeA=initialiser_listeA(L.nb_objets);
 	printf("DEBUT \n");
-	int result = remplir_boite(B.largeur, B.hauteur, &L,0,L.nb_objets);
-	printf("RESULTAT SURFACE : %d\n",result);	
+	Liste listeS = remplir_boite(&B,&L, listeA, B.largeur, 1);
+	printf("----------------------------------------\n RESULTAT SURFACE : %d \n",listeS.surface);
+	afficher_listeS(&listeS, &L);
+	afficher_tout(&L,&B);
 	return 0;
 }

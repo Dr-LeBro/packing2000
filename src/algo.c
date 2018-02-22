@@ -4,149 +4,116 @@
 #include"../headers/algo.h"
 #include"../headers/boite.h"
 #include"../headers/objets.h"
-//~ 
-//~ int selecteur_largeurs(int largeurBoite, Liste *boiteObjets, int largeurBandes, int resultats[3]){
-	//~ //int largeurRestante = largeurBoite-largeurBandes; 
-	//~ int i, moyLargeur=0;
-	//~ for(i=0; i<boiteObjets->nb_objets; i++){
-		//~ moyLargeur+=boiteObjets->objets[i].largeur;
-		//~ moyLargeur+=boiteObjets->objets[i].hauteur;
-	//~ }
-	//~ resultats[0] = boiteObjets->objets[(int)(i-i/1.4)].largeur;
-	//~ resultats[1] = moyLargeur / boiteObjets->nb_objets;
-	//~ resultats[2] = boiteObjets->objets[i-i/4].largeur;
-	//~ return 3;
-//~ }
-//~ 
-//~ bande *remplir_bande(int largeurBande, int hauteur, Liste *boiteObjets, bande *bandes){
-	//~ int i;
-	//~ bande *bande1;
-	//~ for(i=0; i<boiteObjets->nb_objets; i++){
-		//~ if(boiteObjets->objets[i].largeur <= boiteObjets->objets[i].hauteur && boiteObjets->objets[i].largeur <= largeurBande){
-			//~ ajouter_objet_struct(bande1->boite_objets, &(boiteObjets->objets[i]));
-			//~ supprimer_objet_struct(boiteObjets, &(boiteObjets->objets[i]));
-		//~ }else if(boiteObjets->objets[i].largeur > boiteObjets->objets[i].hauteur && boiteObjets->objets[i].hauteur <= largeurBande){
-			//~ ajouter_objet_struct(bande1->boite_objets, &(boiteObjets->objets[i]));
-			//~ supprimer_objet_struct(boiteObjets, &(boiteObjets->objets[i]));
-		//~ }
-	//~ }
-	//~ return bande1;
-//~ }
-//~ 
-//~ int calcul_surface(bande1, ){
-	//~ 
-	//~ 
-	//~ 
-//~ }
-//~ 
-//~ bande *remplir_boite(boite *boiteARemplir, Liste boiteObjets, int largeurBandes, int bandeCourrante){
-	//~ int resultats[3], i;
-	//~ bande *meilleure = NULL, *bande1 = NULL;
-	//~ int nbLargeurs = selecteur_largeurs(boiteARemplir->largeur, &boiteObjets, largeurBandes, resultats);
-	//~ for(i=0; i<nbLargeurs; i++){
-		//~ bande1 = remplir_bande(resultats[i], boiteARemplir->hauteur, &boiteObjets, bande1);
-		//~ remplir_boite(boiteARemplir, boiteObjets, bande1->largeur+largeurBandes, i+1);
-		//~ if(calcul_surface(bande1){
-			//~ 
-		//~ }
-	//~ }
-	//~ 
-	//~ return meilleure;
-//~ }
 
-int select_largeurs(int largeur_boite, Liste *liste_objets,int nb_objets, int k, int largeurs[]){
-	if(nb_objets > 3){
-		largeurs[0]=liste_objets->objets[0].largeur;
-		largeurs[1]=liste_objets->objets[1].largeur;
-		largeurs[2]=liste_objets->objets[2].largeur;
-		return 3;
-	}
-	else {
-		largeurs[0]=-1;
-		largeurs[1]=-1;
-		largeurs[2]=-1;
-		return 0;
-	}
-}
+#define ANSI_COLOR_RED     "\x1b[31m"
+#define ANSI_COLOR_GREEN   "\x1b[32m"
+#define ANSI_COLOR_YELLOW  "\x1b[33m"
+#define ANSI_COLOR_BLUE    "\x1b[34m"
+#define ANSI_COLOR_RESET   "\x1b[0m"
 
-int calcul_surface_bande(bande *B, int nb_objets, Liste *liste_objets){
-	int i, surface=0;
-	for(i=0;i<nb_objets;i++){
-		if(B->tab[i] == 1){
-			surface=surface+liste_objets->objets[i].largeur*liste_objets->objets[i].hauteur;
+//SELECTION DE LARGEURS V1 - BOURRIN - OK
+int select_largeurs(Liste_objet *liste_objets, Liste *listeA, int largeurs[],int k){
+	int i,j=0;
+	for(i=0;i<liste_objets->nb_objets;i++){
+		//TEST SI LARGEUR RENTRE DANS PLACE DISPO
+		if(listeA->objets[i] == 0){
+			if(liste_objets->objets[i].largeur <= k){
+				largeurs[j]=liste_objets->objets[i].largeur;
+				j++;
+			}
 		}
-	}	
-	return surface;
+		//LIMITEUR LARGEURS
+		if(j==2){return j;}
+	}
+	return j;
 }
 
-void inversion_liste(Liste *liste_objets,int i, int nb_objets){
-	Liste *tmp=malloc(sizeof(Liste));
-	tmp->objets=malloc(sizeof(objet));
-	tmp->objets[0]=liste_objets->objets[i];
-	liste_objets->objets[i]=liste_objets->objets[nb_objets];
-	liste_objets->objets[nb_objets]=tmp->objets[0];
+int surface_objet(objet A){
+	return A.largeur*A.hauteur;
 }
 
-bande *remplir_bande(int largeur, int hauteur, Liste *liste_objets, int nb_objets){
-	bande *B=malloc(sizeof(bande));
-	int i, nb_obj_total=liste_objets->nb_objets;
-	B->nb_objets=0;
-	B->tab=malloc(sizeof(int)*(nb_obj_total+1));
-	B->tab_rotation=malloc(sizeof(int)*(nb_obj_total+1));
-	printf("TEST 1 %d \n",nb_obj_total);
-	for(i=0; i<nb_objets; i++){
-		printf("FOR %d\n",i);
-		if(liste_objets->objets[i].largeur <= largeur){
-			printf("TEST 2\n");
-			B->objets=malloc(sizeof(objet)*(nb_objets+1));
-			B->objets[nb_objets]=&liste_objets->objets[i];
-			printf("TEST 3\n");
-			B->nb_objets++;
-			printf("TEST 4\n");
-			B->tab[i]=1;
-			printf("TEST 41\n");
-			B->tab_rotation[i]=0;
-			printf("TEST 5\n");
-			inversion_liste(liste_objets ,i ,nb_objets);
-			printf("TEST 6\n");
-			nb_objets--;
-		}else if (liste_objets->objets[i].hauteur <= largeur){	
-			B->objets[nb_objets]=&liste_objets->objets[i];
-			B->nb_objets++;
-			B->tab[i]=1;
-			B->tab_rotation[i]=1;
-			inversion_liste(liste_objets ,i ,nb_objets);
-			nb_objets--;
+//REMPLISAGE BANDE
+void remplir_bande(int hauteur, int largeur_bande, Liste_objet *liste_objets, Liste *listeA){
+	int i;
+	//printf("DEBUT REMPLISAGE BANDE\n");
+	//PARCOURS DE TOUS LES OBJETS DISPO | nb_objets_dispo
+	//printf("TEST REMPLIR BANDE | largeur : %d , hauteur : %d \n",largeur_bande,hauteur);
+	for(i=0; i<liste_objets->nb_objets; i++){
+		//printf("TEST REMPLIR BANDE | FOR i:%d , nb_objets_dispo : %d hauteur %d\n",i,nb_objets_dispo,hauteur);
+		//TEST HORIZONTAL
+		if(hauteur <= 0) break;
+		if(listeA->objets[i]==0){
+			if(liste_objets->objets[i].largeur <= largeur_bande){
+				//TEST HAUTEUR RESTANTE
+				if(hauteur - liste_objets->objets[i].hauteur >= 0){
+					//printf("TEST REMPLIR BANDE | LARGEUR\n");
+					listeA->objets[i]=1;
+					listeA->nb_objets++;
+					listeA->orientation[i]=0;
+					listeA->surface+=surface_objet(liste_objets->objets[i]);
+					hauteur-=liste_objets->objets[i].hauteur;
+				}
+			}
+			//TEST VERTICAL
+			else if (liste_objets->objets[i].hauteur <= largeur_bande){
+				//TEST HAUTEUR RESTANTE
+				if(hauteur - liste_objets->objets[i].largeur >= 0){
+					//printf("TEST REMPLIR BANDE | HAUTEUR\n");
+					listeA->objets[i]=1;
+					listeA->nb_objets++;
+					listeA->orientation[i]=1;
+					listeA->surface+=surface_objet(liste_objets->objets[i]);
+					hauteur-=liste_objets->objets[i].hauteur;
+				}
+			}
 		}
 	}
-	B->surface=calcul_surface_bande(B, nb_objets, liste_objets);
-	return B;
 }
-	
-int remplir_boite(int largeur_boite, int hauteur_boite, Liste *liste_objets,int k,int nb_objets){
-	int best=0, i, P=0;
-	bande *B;
-	int largeurs[3];
-	printf("NBLARGEURS\n");
-	int nb_largeurs = select_largeurs(largeur_boite, liste_objets,nb_objets,k, largeurs);
-	printf("LARGEURS : %d %d %d\n",largeurs[0],largeurs[1],largeurs[2]);
 
-
-	printf("ITERATION NBLARG %d\n",nb_largeurs);
-	printf("NB OBJETS : %d\n",nb_objets);	
-	sleep(1);
-	for(i=0;i<nb_largeurs;i++){
-		printf("REMPLIR BANDE %d\n",i);
-		B=remplir_bande(largeurs[i],hauteur_boite, liste_objets, nb_objets);
-		printf("APPEL RECURSIF\n");
-		P=remplir_boite(largeur_boite-largeurs[i],hauteur_boite, liste_objets, k, nb_objets-B->nb_objets);
-		if(B->surface+P > best){
-			best=B->surface+P;
-		}
+void hierarchie(int n){
+	int i; // Utiliser nb largeur + i
+	printf(ANSI_COLOR_GREEN "%d├", n);
+	for(i=0; i<n; i++){
+		printf("─");
 	}
-	printf("RETURN BEST %d\n",best);
-	sleep(1);
-	return best;
+	printf(">" ANSI_COLOR_RESET);
 }
 
 
+//REMPLISAGE BOITE V1 - NB LARGEURS FIXES | BOURRIN | CALCUL SEULEMENT LA SURFACE
+Liste remplir_boite(boite *box, Liste_objet *liste_objets, Liste listeA, int k, int couche){
+        //SECU NB OBJ
+        if(listeA.nb_objets==liste_objets->nb_objets||k<=0){
+			hierarchie(couche);
+			printf(ANSI_COLOR_GREEN"RETURN FIN %d "ANSI_COLOR_RESET"\n", listeA.surface);
+			return listeA;
+        }
+        int i;
+        int largeurs[3];
+        int nb_largeurs = select_largeurs(liste_objets, &listeA, largeurs, k);
+        //printf(ANSI_COLOR_BLUE "\n[---------------------------------- LARGEURS %d : %d %d %d ----------------------------------]"ANSI_COLOR_RESET"\n",nb_largeurs,largeurs[0],largeurs[1],largeurs[2]);
+       
+	if(nb_largeurs == 0){
+		hierarchie(couche);
+		printf(ANSI_COLOR_GREEN"RETURN FIN | PLUS LARGEURS %d "ANSI_COLOR_RESET"\n", listeA.surface);
+		return listeA;
+	}
+	Liste best;
+	best=initialiser_listeA(liste_objets->nb_objets); 
+	//printf("NB OBJETS : %d\n",nb_objets); 
+        for(i=0;i<nb_largeurs;i++){
+		Liste listeB=dupliquer_listeA(&listeA, liste_objets->nb_objets);
+                //printf("\n[----------------- REMPLIR BANDE %d | RESTANT %d -----------------]\n",i, k);
+                remplir_bande(box->hauteur, largeurs[i], liste_objets, &listeB);
+                int nv_k=k-largeurs[i];
+                //printf("NOUVEAU NB OBJ: %d | NV K :%d\n",nv_nb_objets,nv_k);
+                Liste listeP=remplir_boite(box, liste_objets, listeB, nv_k, couche+1);
+                if(listeP.surface > best.surface){
+                        //printf(ANSI_COLOR_YELLOW "NOUVEAU BEST BANDE | surface %d P %d"ANSI_COLOR_RESET "\n",B->surface,P);
+                        best=dupliquer_listeA(&listeP, liste_objets->nb_objets);
+                }
+        }
+        hierarchie(couche);
+        printf(ANSI_COLOR_GREEN"RETURN BEST %d"ANSI_COLOR_RESET"\n",best.surface);
+        return best;
+}
