@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<time.h>
 #include"../headers/boite.h"
 #include"../headers/objets.h"
 #include"../headers/algo.h"
@@ -62,8 +63,12 @@ int main(){
 	fflush(stdout);
 	Liste listeA=initialiser_listeA(L.nb_objets);
 	printf("DEBUT ALGO\n");
+	 clock_t temps;
+	temps = clock();
 	Liste listeS = remplir_boite(&B,&L, listeA, B.largeur, 1);
-	printf("----------------------------------------\n RESULTAT SURFACE : %d \n",listeS.surface);
+	printf("----------------------------------------\n RESULTAT SURFACE : %d / %d\n",listeS.surface,B.largeur*B.hauteur);
+	double temps_final=(double)(clock()-temps)/CLOCKS_PER_SEC;
+	printf("%f en %d etapes\n", temps_final, cc);
 	//afficher_listeS(&listeS, &L);
 	afficher_bandes(&listeS,&L);
 	afficher_tout(&L,&B);

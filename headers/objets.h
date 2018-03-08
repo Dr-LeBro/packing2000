@@ -14,6 +14,7 @@ typedef struct{
 
 typedef struct{
 	int surface;
+	int surface_perdue;
 	int nb_objets;
 	int* objets;
 	int* orientation;	
@@ -26,6 +27,7 @@ void ajouter_objet_struct(Liste_objet* a, objet* obj);
 void supprimer_objet(Liste_objet* a, char *nom);
 Liste initialiser_listeA(int nb_objets);
 Liste dupliquer_listeA(Liste* listeA, int nb_objets_total);
+void supprimer_listeA(Liste* A);
 
 #endif
 

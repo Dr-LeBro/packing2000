@@ -72,6 +72,7 @@ Liste initialiser_listeA(int nb_objets){
 	Liste tmp;
 	tmp.nb_objets=0;
 	tmp.surface=0;
+	tmp.surface_perdue=9999999;
 	tmp.objets=malloc(sizeof(int)*nb_objets);
 	tmp.orientation=malloc(sizeof(int)*nb_objets);
 	int i;
@@ -81,17 +82,28 @@ Liste initialiser_listeA(int nb_objets){
 	}
 	return tmp;
 }
-	
+
 /*Copie listeA vers une nouvelle liste*/
 Liste dupliquer_listeA(Liste* A, int nb_objets_total){
-	Liste tmp=initialiser_listeA(nb_objets_total);
+	Liste tmp;
+	tmp.objets=malloc(sizeof(int)*nb_objets_total);
+	tmp.orientation=malloc(sizeof(int)*nb_objets_total);
 	tmp.nb_objets=A->nb_objets;
 	tmp.surface=A->surface;
+	tmp.surface_perdue=A->surface_perdue;
 	int i;
 	for(i=0;i<nb_objets_total;i++){
 		tmp.objets[i]=A->objets[i];
 		tmp.orientation[i]=A->orientation[i];
 	}
 	return tmp;
+}
+
+/*Supprimer listeA*/
+void supprimer_listeA(Liste* A){
+	free(A->objets);
+	free(A->orientation);
+	A->objets=NULL;
+	A->orientation=NULL;
 }
 
