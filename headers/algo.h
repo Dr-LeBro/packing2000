@@ -4,5 +4,7 @@
 #include"boite.h"
 #include"objets.h"
 
-int remplir_boite(int largeur_boite, int hauteur_boite, Liste *liste_objets,int k,int nb_objets);
+extern int cc;
+
+Liste remplir_boite(boite *box, Liste_objet *liste_objets, Liste listeA, int k, int couche);
 #endif

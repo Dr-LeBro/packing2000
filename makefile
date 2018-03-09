@@ -1,7 +1,7 @@
 CC = gcc
-CCFLAGS = -g -Wall
-OBJ = algo.o boite.o debug.o objets.o interfaceC.o interface.o
-OBJ2 = Ofiles/algo.o Ofiles/boite.o Ofiles/debug.o Ofiles/objets.o Ofiles/interfaceC.o Ofiles/interface.o
+CCFLAGS = -g -Wall -lX11 -lXext
+OBJ = algo.o boite.o debug.o objets.o interfaceC.o interface.o interfaceG.o ez-draw.o
+OBJ2 = Ofiles/algo.o Ofiles/boite.o Ofiles/debug.o Ofiles/objets.o Ofiles/interfaceC.o Ofiles/interface.o Ofiles/interfaceG.o Ofiles/ez-draw.o
 PATHSRC = src/
 PATHHEADER = headers/
 DEPINT = Interface/
@@ -19,7 +19,7 @@ vpath %.c src/Generator
 
 vpath %.o Ofiles
 
-all: xX_projet_Xx generator
+all: makedir xX_projet_Xx generator
 
 xX_projet_Xx : main.c $(OBJ)
 	$(CC) $(CCFLAGS) -o xX_projet_Xx $(PATHSRC)main.c $(OBJ2)
@@ -42,12 +42,20 @@ interface.o : interface.c interface.h interfaceC.h
 interfaceC.o : interfaceC.c interfaceC.h debug.h
 	$(CC) $(CCFLAGS) -c $(PATHSRC)$(DEPINT)interfaceC.c $(OUTO)
 
+interfaceG.o : interfaceG.c interfaceG.h debug.h ez-draw.h
+	$(CC) $(CCFLAGS) -c $(PATHSRC)$(DEPINT)interfaceG.c $(OUTO)
+
+ez-draw.o : ez-draw.c ez-draw.h
+	$(CC) $(CCFLAGS) -c $(PATHSRC)$(DEPINT)ez-draw.c $(OUTO)
+
 debug.o : debug.c debug.h
 	$(CC) $(CCFLAGS) -c $(PATHSRC)$(DEPINT)debug.c $(OUTO)
 
+makedir :
+	- mkdir Ofiles
 clean :
-	- rm xX_projet_Xx
-	- rm -f *.o
+	- rm xX_projet_Xx generator
+	- rm -f -r Ofiles/
 
 
 

@@ -9,17 +9,16 @@
 #include"../headers/boite.h"
 
 /*Initialisation de liste d'objets, renvoi pointeur nouvelle liste*/
-Liste initialiser_liste(){
-	Liste *ptr;
+Liste_objet initialiser_liste(){
+	Liste_objet *ptr;
 	ptr=malloc(sizeof(Liste));
 	ptr->nb_objets=0;
 	ptr->objets=NULL;
-	ptr->bande_solution=NULL;
 	return *ptr;
 }
 
 /*Receptions objets pour liste depuis generateur*/
-void reception_objets(Liste* a){
+void reception_objets(Liste_objet* a){
 	int i=0;
 	char tmp_char[50];
 	scanf("%d",&a->nb_objets);
@@ -36,7 +35,7 @@ void reception_objets(Liste* a){
 }
 
 /*Ajout objet a liste, N°Liste/nom/largeur/hauteur/posX/posY*/
-void ajouter_objet(Liste* a, char *nom ,int l, int h, int x, int y){
+void ajouter_objet(Liste_objet* a, char *nom ,int l, int h, int x, int y){
 	a->nb_objets++;
 	a->objets=realloc(a->objets, sizeof(objet)*a->nb_objets);
 	a->objets[a->nb_objets-1].largeur=l;
@@ -47,12 +46,12 @@ void ajouter_objet(Liste* a, char *nom ,int l, int h, int x, int y){
 }
 
 /*Ajout objet a liste, objet, N°Liste (Simplification de ajouter_objet)*/
-void ajouter_objet_struct(Liste* a, objet* obj){
+void ajouter_objet_struct(Liste_objet* a, objet* obj){
 	ajouter_objet(a, obj->nom, obj->largeur, obj->hauteur, 0,0);	
 }
 
 /*Supp objets*/
-void supprimer_objet(Liste* a, char *nom){
+void supprimer_objet(Liste_objet* a, char *nom){
 	int i;
 	for(i=0;i<a->nb_objets;i++){
 		if(strcmp(a->objets[i].nom,nom)){
@@ -68,8 +67,43 @@ void supprimer_objet(Liste* a, char *nom){
 	}
 }
 
-void ajouter_bande_solution(Liste *a, bande *b){
-	a->nb_bande_solution++;
-	a->bande_solution=realloc(a->bande_solution, sizeof(bande)*a->nb_bande_solution);
-	a->bande_solution[a->nb_bande_solution-1]=*b;
+/*Initiliser listeA */
+Liste initialiser_listeA(int nb_objets){
+	Liste tmp;
+	tmp.nb_objets=0;
+	tmp.surface=0;
+	tmp.surface_perdue=9999999;
+	tmp.objets=malloc(sizeof(int)*nb_objets);
+	tmp.orientation=malloc(sizeof(int)*nb_objets);
+	int i;
+	for(i=0; i<nb_objets;i++){
+		tmp.objets[i]=0;
+		tmp.orientation[i]=0;
+	}
+	return tmp;
 }
+
+/*Copie listeA vers une nouvelle liste*/
+Liste dupliquer_listeA(Liste* A, int nb_objets_total){
+	Liste tmp;
+	tmp.objets=malloc(sizeof(int)*nb_objets_total);
+	tmp.orientation=malloc(sizeof(int)*nb_objets_total);
+	tmp.nb_objets=A->nb_objets;
+	tmp.surface=A->surface;
+	tmp.surface_perdue=A->surface_perdue;
+	int i;
+	for(i=0;i<nb_objets_total;i++){
+		tmp.objets[i]=A->objets[i];
+		tmp.orientation[i]=A->orientation[i];
+	}
+	return tmp;
+}
+
+/*Supprimer listeA*/
+void supprimer_listeA(Liste* A){
+	free(A->objets);
+	free(A->orientation);
+	A->objets=NULL;
+	A->orientation=NULL;
+}
+
