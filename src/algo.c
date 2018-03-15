@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<math.h>
 
 #include"../headers/algo.h"
 #include"../headers/boite.h"
@@ -12,8 +13,10 @@
 #define ANSI_COLOR_RESET   "\x1b[0m"
 
 int cc=0;
+int cc2=0;
+Liste bestD;
 
-//SELECTION DE LARGEURS V1 - BOURRIN - OK
+//SELECTION DE LARGEURS V1 - BOURRIN
 int select_largeurs(Liste_objet *liste_objets, Liste *listeA, int largeurs[],int k){
 	int i,j=0;
 	for(i=0;i<liste_objets->nb_objets;i++){
@@ -25,9 +28,56 @@ int select_largeurs(Liste_objet *liste_objets, Liste *listeA, int largeurs[],int
 			}
 		}
 		//LIMITEUR LARGEURS
-		if(j==99){return j;}
+		if(j==100){return j;}
 	}
 	return j;
+}
+
+//SELECTION DE LARGEURS V2
+int select_largeurs_new(Liste_objet *liste_objets, Liste *listeA, int largeurs[],int k){
+	printf(">PIGUHENZUEIHPH\n");
+	int moy=0;
+	printf("DA FIRST MOY %d \n",moy);
+	int j=0, i, ecartMoy=0;
+	printf("TEST 1\n");
+	for(i=0;i<liste_objets->nb_objets;i++){
+		//TEST SI LARGEUR RENTRE DANS PLACE DISPO
+		if(listeA->objets[i] == 0){
+			if(liste_objets->objets[i].largeur <= k){
+				//printf("BEFOR MOY\n");
+				//printf("MOY : %d\n",moy);
+				moy+=liste_objets->objets[i].largeur;
+				//moy+=liste_objets->objets[i].hauteur;
+				if(i>0){
+					ecartMoy+=abs(liste_objets->objets[i].largeur-liste_objets->objets[i-1].largeur);
+				}
+				j++;
+			}
+		}
+		//LIMITEUR LARGEURS
+	}
+	//printf("TEST 2\n");
+	if(ecartMoy<=0){
+		ecartMoy=1;
+	}
+	//printf("TEST 3 : moy %d \n", moy);
+	fflush(stdout);
+	if(moy<=0) moy=1;
+	//printf("TEST 4: moy %d \n",moy);
+	if(j==0) j=1;
+	//printf("TEST 5 : j %d \n",j);
+	moy/=j;
+	//moy/=(j*2);
+	//printf("TEST 6\n");
+	ecartMoy=ecartMoy/j;
+	printf("ecart: %d, moy: %d\n", ecartMoy, moy);
+	//ecartMoy/=(j*2);
+	largeurs[0]=moy-ecartMoy;
+	largeurs[1]=moy;
+	largeurs[2]=moy+ecartMoy;
+	return 3;
+
+
 }
 
 //CALCUL SURFACE OBJET
@@ -91,8 +141,8 @@ int calcul_surface_perdue(int k, int surface, boite *box){
 	
 }
 
-//REMPLISAGE BOITE V1 - NB LARGEURS FIXES     | BOURRIN | CALCUL SEULEMENT LA SURFACE
-Liste remplir_boite(boite *box, Liste_objet *liste_objets, Liste listeA, int k, int couche){
+//REMPLISAGE BOITE V1 | ascendante
+Liste remplir_boite_A(boite *box, Liste_objet *liste_objets, Liste listeA, int k, int couche){
 	//SECU NB OBJ
 	if(listeA.nb_objets==liste_objets->nb_objets||k<=0){
 		//hierarchie(couche);
@@ -115,11 +165,12 @@ Liste remplir_boite(boite *box, Liste_objet *liste_objets, Liste listeA, int k, 
 		Liste listeB=dupliquer_listeA(&listeA, liste_objets->nb_objets);
 		//printf("\n[----------------- REMPLIR BANDE %d | RESTANT %d -----------------]\n",i, k);
 		remplir_bande(box->hauteur, largeurs[i], liste_objets, &listeB, couche);
+		
 		int nv_k=k-largeurs[i];
 		listeB.surface_perdue = calcul_surface_perdue(nv_k, listeB.surface, box); 
 		//printf("NOUVEAU NB OBJ: %d | NV K :%d\n",nv_nb_objets,nv_k);
 		if(listeB.surface_perdue<=best.surface_perdue){
-			Liste listeP=remplir_boite(box, liste_objets, listeB, nv_k, couche+1);
+			Liste listeP=remplir_boite_A(box, liste_objets, listeB, nv_k, couche+1);
 			if(listeP.surface > best.surface){
 				//printf(ANSI_COLOR_YELLOW "NOUVEAU BEST BANDE | surface %d P %d"ANSI_COLOR_RESET "\n",B->surface,P);
 				supprimer_listeA(&best);
@@ -132,4 +183,37 @@ Liste remplir_boite(boite *box, Liste_objet *liste_objets, Liste listeA, int k, 
 	//printf(ANSI_COLOR_GREEN"RETURN BEST %d"ANSI_COLOR_RESET"\n",best.surface);
 	cc++;
 	return best;
+}
+
+void remplir_boite_D(boite *box, Liste_objet *liste_objets, Liste listeP, int k, int couche){
+	//INIT bestD
+	if(bestD.nb_objets == 0){
+		//printf("INIT bestD\n");
+		bestD=initialiser_listeA(liste_objets->nb_objets); 
+	}
+	
+	//COMPARE listeP ET bestD
+	if(listeP.surface > bestD.surface){
+		printf("NEW bestD \n");
+		bestD=dupliquer_listeA(&listeP, liste_objets->nb_objets);
+	}
+	
+	//SELECTION LARGEURS
+	int i, largeurs[liste_objets->nb_objets];
+	int nb_largeurs = select_largeurs(liste_objets, &listeP, largeurs, k);
+	int surface_perdue_old = 99999;
+	//PARCOURS LARGEUR
+	for(i=0;i<nb_largeurs;i++){
+		Liste listeB=dupliquer_listeA(&listeP, liste_objets->nb_objets);
+		remplir_bande(box->hauteur, largeurs[i], liste_objets, &listeB, couche);
+		int nv_k=k-largeurs[i];
+		listeB.surface_perdue = calcul_surface_perdue(nv_k, listeB.surface, box);
+		
+		if(listeB.surface_perdue<=surface_perdue_old){
+			remplir_boite_D(box, liste_objets, listeB, nv_k, couche+1);
+			surface_perdue_old = listeB.surface_perdue;
+		}
+		supprimer_listeA(&listeB);
+	}
+	cc2++;
 }

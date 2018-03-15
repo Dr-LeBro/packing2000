@@ -4,6 +4,7 @@
 #include"../headers/boite.h"
 #include"../headers/objets.h"
 #include"../headers/algo.h"
+#include"../headers/Interface/interfaceG.h"
 
 /*Affiche Boite et Liste_Objets*/
 void afficher_tout(Liste_objet *a,boite *box){ 
@@ -62,15 +63,28 @@ int main(){
 	reception_objets(&L);
 	fflush(stdout);
 	Liste listeA=initialiser_listeA(L.nb_objets);
-	printf("DEBUT ALGO\n");
-	 clock_t temps;
+
+	printf("DEBUT ALGO A\n");
+	clock_t temps;
 	temps = clock();
-	Liste listeS = remplir_boite(&B,&L, listeA, B.largeur, 1);
+	Liste listeS = initialiser_listeA(0);
+	//remplir_boite_A(&B,&L, listeA, B.largeur, 1);
 	printf("----------------------------------------\n RESULTAT SURFACE : %d / %d\n",listeS.surface,B.largeur*B.hauteur);
 	double temps_final=(double)(clock()-temps)/CLOCKS_PER_SEC;
 	printf("%f en %d etapes\n", temps_final, cc);
-	//afficher_listeS(&listeS, &L);
-	afficher_bandes(&listeS,&L);
+	//afficher_bandes(&listeS,&L);
 	afficher_tout(&L,&B);
+	//gui(&B,&listeS,&L,temps_final);
+
+	printf("DEBUT ALGO D\n");
+	clock_t temps2;
+	temps2 = clock();
+	remplir_boite_D(&B,&L, listeA, B.largeur, 1);
+	printf("----------------------------------------\n RESULTAT SURFACE : %d / %d\n",bestD.surface,B.largeur*B.hauteur);
+	double temps_final2=(double)(clock()-temps2)/CLOCKS_PER_SEC;
+	printf("%f en %d etapes\n", temps_final2, cc2);
+	afficher_bandes(&bestD,&L);
+	gui(&B,&listeS,&bestD,&L,temps_final,temps_final2);
+
 	return 0;
 }
