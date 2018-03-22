@@ -14,7 +14,7 @@
 
 int cc=0;
 int cc2=0;
-Liste bestD;
+Liste best;
 
 //SELECTION DE LARGEURS V1 - BOURRIN
 int select_largeurs(Liste_objet *liste_objets, Liste *listeA, int largeurs[],int k){
@@ -35,49 +35,46 @@ int select_largeurs(Liste_objet *liste_objets, Liste *listeA, int largeurs[],int
 
 //SELECTION DE LARGEURS V2
 int select_largeurs_new(Liste_objet *liste_objets, Liste *listeA, int largeurs[],int k){
-	printf(">PIGUHENZUEIHPH\n");
-	int moy=0;
-	printf("DA FIRST MOY %d \n",moy);
-	int j=0, i, ecartMoy=0;
-	printf("TEST 1\n");
+	int moy=0, max=0, variance=0, min = 99999;
+	int j=0, i=0, y=0;
 	for(i=0;i<liste_objets->nb_objets;i++){
-		//TEST SI LARGEUR RENTRE DANS PLACE DISPO
-		if(listeA->objets[i] == 0){
-			if(liste_objets->objets[i].largeur <= k){
-				//printf("BEFOR MOY\n");
-				//printf("MOY : %d\n",moy);
-				moy+=liste_objets->objets[i].largeur;
-				//moy+=liste_objets->objets[i].hauteur;
-				if(i>0){
-					ecartMoy+=abs(liste_objets->objets[i].largeur-liste_objets->objets[i-1].largeur);
-				}
-				j++;
+		if(listeA->objets[i] == 0 && liste_objets->objets[i].largeur <= k){
+			moy+=liste_objets->objets[i].largeur;
+			moy+=liste_objets->objets[i].hauteur;
+			j+=2;
+			if(liste_objets->objets[i].largeur>max){
+				max = liste_objets->objets[i].largeur;
+			}
+			if(liste_objets->objets[i].hauteur>max){
+				max = liste_objets->objets[i].hauteur;
+			}
+			if(liste_objets->objets[i].largeur<min){
+				min = liste_objets->objets[i].largeur;
+			}
+			if(liste_objets->objets[i].hauteur<min){
+				min = liste_objets->objets[i].hauteur;
 			}
 		}
-		//LIMITEUR LARGEURS
 	}
-	//printf("TEST 2\n");
-	if(ecartMoy<=0){
-		ecartMoy=1;
+	if(j==0){
+		return 0;
+	}else{
+		moy/=j;
+		for(i=0;i<liste_objets->nb_objets;i++){
+			if(listeA->objets[i] == 0 && liste_objets->objets[i].largeur <= k){
+				variance+=((int) pow(liste_objets->objets[i].largeur- moy, 2));
+				variance+=((int) pow(liste_objets->objets[i].hauteur- moy, 2));
+			}
+		}
+		variance=(int)sqrt(variance/j)/2;
+		if(variance < 1) variance = 1;
+		for(i=min; i<max && y<liste_objets->nb_objets; i+=variance){
+			largeurs[y] = i;
+			y++;
+		}
+		//printf("min: %d, max: %d | moy: %d, variance: %d | y:%d\n", min, max, moy, variance, y);
+		return y;
 	}
-	//printf("TEST 3 : moy %d \n", moy);
-	fflush(stdout);
-	if(moy<=0) moy=1;
-	//printf("TEST 4: moy %d \n",moy);
-	if(j==0) j=1;
-	//printf("TEST 5 : j %d \n",j);
-	moy/=j;
-	//moy/=(j*2);
-	//printf("TEST 6\n");
-	ecartMoy=ecartMoy/j;
-	printf("ecart: %d, moy: %d\n", ecartMoy, moy);
-	//ecartMoy/=(j*2);
-	largeurs[0]=moy-ecartMoy;
-	largeurs[1]=moy;
-	largeurs[2]=moy+ecartMoy;
-	return 3;
-
-
 }
 
 //CALCUL SURFACE OBJET
@@ -151,7 +148,7 @@ Liste remplir_boite_A(boite *box, Liste_objet *liste_objets, Liste listeA, int k
 	}
 	int i;
 	int largeurs[liste_objets->nb_objets];
-	int nb_largeurs = select_largeurs(liste_objets, &listeA, largeurs, k);
+	int nb_largeurs = select_largeurs_new(liste_objets, &listeA, largeurs, k);
 	//printf(ANSI_COLOR_BLUE "\n[---------------------------------- LARGEURS %d : %d %d %d ----------------------------------]"ANSI_COLOR_RESET"\n",nb_largeurs,largeurs[0],largeurs[1],largeurs[2]);
 	if(nb_largeurs == 0){
 		//hierarchie(couche);
@@ -187,33 +184,34 @@ Liste remplir_boite_A(boite *box, Liste_objet *liste_objets, Liste listeA, int k
 
 void remplir_boite_D(boite *box, Liste_objet *liste_objets, Liste listeP, int k, int couche){
 	//INIT bestD
-	if(bestD.nb_objets == 0){
-		//printf("INIT bestD\n");
-		bestD=initialiser_listeA(liste_objets->nb_objets); 
+	if(best.nb_objets == 0){
+		printf("INIT bestD\n");
+		best=initialiser_listeA(liste_objets->nb_objets); 
 	}
 	
 	//COMPARE listeP ET bestD
-	if(listeP.surface > bestD.surface){
-		printf("NEW bestD \n");
-		bestD=dupliquer_listeA(&listeP, liste_objets->nb_objets);
+	if(listeP.surface > best.surface){
+		printf("NEW best | listeP:%d best:%d\n",listeP.surface, best.surface);
+		best=dupliquer_listeA(&listeP, liste_objets->nb_objets);
 	}
 	
 	//SELECTION LARGEURS
 	int i, largeurs[liste_objets->nb_objets];
 	int nb_largeurs = select_largeurs(liste_objets, &listeP, largeurs, k);
-	int surface_perdue_old = 99999;
+	int surface_perdue_old = box->hauteur*box->largeur;
+	int surface_init = listeP.surface;
 	//PARCOURS LARGEUR
 	for(i=0;i<nb_largeurs;i++){
-		Liste listeB=dupliquer_listeA(&listeP, liste_objets->nb_objets);
-		remplir_bande(box->hauteur, largeurs[i], liste_objets, &listeB, couche);
+		remplir_bande(box->hauteur, largeurs[i], liste_objets, &listeP, couche);
 		int nv_k=k-largeurs[i];
-		listeB.surface_perdue = calcul_surface_perdue(nv_k, listeB.surface, box);
+		listeP.surface_perdue = calcul_surface_perdue(nv_k, listeP.surface, box);
 		
-		if(listeB.surface_perdue<=surface_perdue_old){
-			remplir_boite_D(box, liste_objets, listeB, nv_k, couche+1);
-			surface_perdue_old = listeB.surface_perdue;
+		if(listeP.surface_perdue <= surface_perdue_old){
+			remplir_boite_D(box, liste_objets, listeP, nv_k, couche+1);
+			surface_perdue_old = listeP.surface_perdue;
 		}
-		supprimer_listeA(&listeB);
+		//supprimer_listeA(&listeB);
+		retablir_liste(&listeP, liste_objets->nb_objets, surface_init, couche);
 	}
 	cc2++;
 }

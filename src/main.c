@@ -69,22 +69,23 @@ int main(){
 	temps = clock();
 	Liste listeS = initialiser_listeA(0);
 	//remplir_boite_A(&B,&L, listeA, B.largeur, 1);
+
 	printf("----------------------------------------\n RESULTAT SURFACE : %d / %d\n",listeS.surface,B.largeur*B.hauteur);
 	double temps_final=(double)(clock()-temps)/CLOCKS_PER_SEC;
 	printf("%f en %d etapes\n", temps_final, cc);
 	//afficher_bandes(&listeS,&L);
-	afficher_tout(&L,&B);
 	//gui(&B,&listeS,&L,temps_final);
 
 	printf("DEBUT ALGO D\n");
 	clock_t temps2;
 	temps2 = clock();
 	remplir_boite_D(&B,&L, listeA, B.largeur, 1);
-	printf("----------------------------------------\n RESULTAT SURFACE : %d / %d\n",bestD.surface,B.largeur*B.hauteur);
+	printf("----------------------------------------\n RESULTAT SURFACE : %d / %d\n",best.surface,B.largeur*B.hauteur);
 	double temps_final2=(double)(clock()-temps2)/CLOCKS_PER_SEC;
 	printf("%f en %d etapes\n", temps_final2, cc2);
-	afficher_bandes(&bestD,&L);
-	gui(&B,&listeS,&bestD,&L,temps_final,temps_final2);
+	afficher_bandes(&best,&L);
+	afficher_tout(&L,&B);
+	gui(&B,&listeS,&best,&L,temps_final,temps_final2);
 
 	return 0;
 }

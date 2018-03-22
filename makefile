@@ -1,6 +1,6 @@
 CC = gcc
 CCFLAGS = -g -Wall
-LIBS = -lX11 -lXext
+LIBS = -lX11 -lXext -lm
 OBJ = algo.o boite.o debug.o objets.o interfaceC.o interface.o interfaceG.o ez-draw.o
 OBJ2 = Ofiles/algo.o Ofiles/boite.o Ofiles/debug.o Ofiles/objets.o Ofiles/interfaceC.o Ofiles/interface.o Ofiles/interfaceG.o Ofiles/ez-draw.o
 PATHSRC = src/
