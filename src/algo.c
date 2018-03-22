@@ -82,6 +82,42 @@ int surface_objet(objet A){
 	return A.largeur*A.hauteur;
 }
 
+//REMPLISAGE BANDE SAC A DOS
+void remplir_bande_sac(int hauteur, int largeur_bande, Liste_objet *liste_objets, Liste *listeA, int profondeur){
+	int W = hauteur, N = listeA->nb_objets;
+	int M[N][W];
+	int i, j;
+	
+	for(i=0; i < N; i++){
+		for(j=0; j < W; j++){
+			M[i][j]=-1;
+		}
+	}
+	
+	//INIT MATRICE
+	for(i=0; i < W; i++) M[0][i]=0;
+	
+	for(i=1; i < N; i++){
+		for(j=0; j < W; j++){
+			if(j >= liste_objets->objets[i].hauteur){
+				if(M[i-1][j] > M[i-1][j - liste_objets->objets[i].hauteur] + liste_objets->objets[i].hauteur*liste_objets->objets[i].largeur)	M[i][j] = M[i-1][j];
+				else M[i][j] = M[i-1][j - liste_objets->objets[i].hauteur] + liste_objets->objets[i].hauteur*liste_objets->objets[i].largeur;
+			}else{
+				M[i][i] = M[i-1][j];
+			}
+		}
+	}
+	printf("Matrice %d x %d\n",N,W);
+	for(i=0; i < N; i++){
+		for(j=0; j < W; j++){
+			printf("%d ", M[i][j]);
+		}
+		printf("\n");
+	}
+	printf("\n");
+	
+}
+
 //REMPLISAGE BANDE
 void remplir_bande(int hauteur, int largeur_bande, Liste_objet *liste_objets, Liste *listeA, int profondeur){
 
@@ -203,6 +239,7 @@ void remplir_boite_D(boite *box, Liste_objet *liste_objets, Liste listeP, int k,
 	//PARCOURS LARGEUR
 	for(i=0;i<nb_largeurs;i++){
 		remplir_bande(box->hauteur, largeurs[i], liste_objets, &listeP, couche);
+		remplir_bande_sac(box->hauteur, largeurs[i], liste_objets, &listeP, couche);
 		int nv_k=k-largeurs[i];
 		listeP.surface_perdue = calcul_surface_perdue(nv_k, listeP.surface, box);
 		
