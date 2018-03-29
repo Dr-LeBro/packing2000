@@ -83,39 +83,85 @@ int surface_objet(objet A){
 }
 
 //REMPLISAGE BANDE SAC A DOS
+//MANQUE : CONDITION DEJA UTILISER + LARGEUR DE BANDE
 void remplir_bande_sac(int hauteur, int largeur_bande, Liste_objet *liste_objets, Liste *listeA, int profondeur){
-	int W = hauteur, N = listeA->nb_objets;
+	int W = hauteur, N = liste_objets->nb_objets - listeA->nb_objets;
 	int M[N][W];
+	int C[N]; //INDICE CONVERTER
 	int i, j;
-	
+
+	//INIT MATRICE
 	for(i=0; i < N; i++){
 		for(j=0; j < W; j++){
-			M[i][j]=-1;
+			M[i][j]=0;
 		}
 	}
 	
-	//INIT MATRICE
-	for(i=0; i < W; i++) M[0][i]=0;
 	
+	//INIT CAST INDICES
+	j=0;
+	printf("Indices : ");
+	for(i=0; i < liste_objets->nb_objets; i++){
+		if(listeA->objets[i] == 0){
+			C[j]=i;
+			j++;
+			printf("%d ",i);
+		}
+	}
+	printf(" | j:%d\n",j);
+	
+	//INIT LIGNE 0
+	for(i=0; i < W; i++) M[0][i]=0;
 	for(i=1; i < N; i++){
 		for(j=0; j < W; j++){
-			if(j >= liste_objets->objets[i].hauteur){
-				if(M[i-1][j] > M[i-1][j - liste_objets->objets[i].hauteur] + liste_objets->objets[i].hauteur*liste_objets->objets[i].largeur)	M[i][j] = M[i-1][j];
-				else M[i][j] = M[i-1][j - liste_objets->objets[i].hauteur] + liste_objets->objets[i].hauteur*liste_objets->objets[i].largeur;
-			}else{
-				M[i][i] = M[i-1][j];
+			//TEST OBJ RENTRE BANDE 
+			if(j >= liste_objets->objets[C[i]].hauteur){ //HAUTEUR
+				if(M[i-1][j] > M[i-1][j - liste_objets->objets[C[i]].hauteur] + liste_objets->objets[C[i]].hauteur*liste_objets->objets[C[i]].largeur)	M[i][j] = M[i-1][j];
+				else M[i][j] = M[i-1][j - liste_objets->objets[C[i]].hauteur] + liste_objets->objets[C[i]].hauteur*liste_objets->objets[C[i]].largeur;
+			}else if(j >= liste_objets->objets[C[i]].largeur){ //LARGEUR
+				if(M[i-1][j] > M[i-1][j - liste_objets->objets[C[i]].largeur] + liste_objets->objets[C[i]].hauteur*liste_objets->objets[C[i]].largeur)	M[i][j] = M[i-1][j];
+				else M[i][j] = M[i-1][j - liste_objets->objets[C[i]].largeur] + liste_objets->objets[C[i]].hauteur*liste_objets->objets[C[i]].largeur;
+			}else{ //SINON
+				M[i][j] = M[i-1][j];
 			}
 		}
 	}
+	
+	//PRINT MATRICE RESULT
 	printf("Matrice %d x %d\n",N,W);
 	for(i=0; i < N; i++){
 		for(j=0; j < W; j++){
-			printf("%d ", M[i][j]);
+			printf("%5.d ", M[i][j]);
 		}
 		printf("\n");
 	}
 	printf("\n");
 	
+	//RESOLUTION MATRICE
+	//REMONTE INITIAL
+	j=N;
+	i=N;
+	while(M[i][j] == M[i][j-1]){
+		j--;
+	}
+	
+	printf("RESOLUTION \n");
+	while(j > 0){
+		printf("TEST \n");
+		while(i > 0 && M[i][j] == M[i-1][j])	i--; //PARCOURS VERS LA GAUCHE
+		j = j - liste_objets->objets[C[i]].hauteur; //REMONTER POIDS OBJ
+		printf("TEST 2\n");
+		if(j >= 0){//AJOUT OBJ
+			printf("AJOUT OBJ %d\n",i);
+			listeA->objets[C[i]]=profondeur;
+			listeA->nb_objets++;
+			listeA->orientation[C[i]]=0;
+			listeA->surface+=surface_objet(liste_objets->objets[C[i]]);
+			printf("TEST 3\n");
+		}
+		i--;
+		if(i==-1)break;
+	}
 }
 
 //REMPLISAGE BANDE
@@ -238,7 +284,7 @@ void remplir_boite_D(boite *box, Liste_objet *liste_objets, Liste listeP, int k,
 	int surface_init = listeP.surface;
 	//PARCOURS LARGEUR
 	for(i=0;i<nb_largeurs;i++){
-		remplir_bande(box->hauteur, largeurs[i], liste_objets, &listeP, couche);
+		//remplir_bande(box->hauteur, largeurs[i], liste_objets, &listeP, couche);
 		remplir_bande_sac(box->hauteur, largeurs[i], liste_objets, &listeP, couche);
 		int nv_k=k-largeurs[i];
 		listeP.surface_perdue = calcul_surface_perdue(nv_k, listeP.surface, box);
