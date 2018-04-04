@@ -21,13 +21,3 @@ void reception_boite(boite *box){
 	box->largeur=tmpl;
 	box->hauteur=tmph;
 }
-
-/*Initialisation bande | Bande/Liste/Largeur/Hauteur/ID*/
-void initialiser_bande(bande *B, Liste *L, int largeur, int hauteur, int id){
-	B->largeur=largeur;
-	B->hauteur=hauteur;
-	B->id_bande=id;
-	B->boite_objets=L;
-}	
-
-

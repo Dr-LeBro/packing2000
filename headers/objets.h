@@ -5,19 +5,30 @@ typedef struct{
 	char nom[50];
 	int largeur;
 	int hauteur;
-	int x;
-	int y;
 } objet;
 
 typedef struct{
-	int nb_objets;	
+	int nb_objets;
 	objet* objets;
+}Liste_objet;
+
+typedef struct{
+	int surface;
+	int surface_perdue;
+	int nb_objets;
+	int* objets;
+	int* orientation;	
 }Liste;
 
-Liste initialiser_liste();
-void reception_objets(Liste* a);
-void ajouter_objet(Liste* a, char *nom, int l, int h, int x, int y);
-void ajouter_objet_struct(Liste* a, objet* obj);
-void supprimer_objet(Liste* a, char *nom);	
+Liste_objet initialiser_liste();
+void reception_objets(Liste_objet* a);
+void ajouter_objet(Liste_objet* a, char *nom, int l, int h, int x, int y);
+void ajouter_objet_struct(Liste_objet* a, objet* obj);
+void supprimer_objet(Liste_objet* a, char *nom);
+Liste initialiser_listeA(int nb_objets);
+Liste dupliquer_listeA(Liste* listeA, int nb_objets_total);
+void supprimer_listeA(Liste* A);
+void retablir_liste(Liste *A, int nb_objets_total, int surface_init, int couche);
 
 #endif
+

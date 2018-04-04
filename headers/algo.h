@@ -4,8 +4,10 @@
 #include"boite.h"
 #include"objets.h"
 
-int selecteur_largeur(int largeurBoite, Liste *boiteObjets, int largeurBandes, int resultats[3]);
-bande *remplir_bande(int largeurBande, int hauteur, Liste *boiteObjets, bande *bandes);
-bande *remplir_bande(int largeurBande, int hauteur, Liste *boiteObjets, bande *bandes);
+extern int cc;
+extern int cc2;
+extern Liste best;
 
+Liste remplir_boite_A(boite *box, Liste_objet *liste_objets, Liste listeA, int k, int couche);
+void remplir_boite_D(boite *box, Liste_objet *liste_objets, Liste listeA, int k, int couche);
 #endif

@@ -8,13 +8,6 @@ typedef struct{
 	int hauteur;
 }boite;
 
-typedef struct{
-	int id_bande;
-	int largeur;
-	int hauteur;
-	Liste *boite_objets;
-}bande;
-
 void initialiser_boite(boite *box);
 void reception_boite(boite *box);
 
