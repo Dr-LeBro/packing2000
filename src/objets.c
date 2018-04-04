@@ -107,3 +107,18 @@ void supprimer_listeA(Liste* A){
 	A->orientation=NULL;
 }
 
+/*Retablit listeP*/
+void retablir_liste(Liste *A, int nb_objets_total, int surface_init, int couche){
+	int i, j=0;
+	for(i=0; i <= nb_objets_total; i++){
+		if(A->objets[i] == couche){
+			A->objets[i]=0;
+			j++;
+		}
+	}
+	A->nb_objets-=j;
+	A->surface = surface_init;
+}
+	
+	
+	

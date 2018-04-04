@@ -28,6 +28,7 @@ void supprimer_objet(Liste_objet* a, char *nom);
 Liste initialiser_listeA(int nb_objets);
 Liste dupliquer_listeA(Liste* listeA, int nb_objets_total);
 void supprimer_listeA(Liste* A);
+void retablir_liste(Liste *A, int nb_objets_total, int surface_init, int couche);
 
 #endif
 

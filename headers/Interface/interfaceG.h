@@ -9,6 +9,6 @@ typedef struct{
     double temps;
 }Win_data;
 
-void gui(boite *box, Liste *S, Liste_objet *L, double temps);
+void gui(boite *box, Liste *A, Liste *D, Liste_objet *L, double temps, double temps2);
 
 #endif
